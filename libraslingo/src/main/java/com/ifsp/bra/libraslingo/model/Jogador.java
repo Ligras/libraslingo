@@ -1,5 +1,6 @@
 package com.ifsp.bra.libraslingo.model;
 public class Jogador {
+    
     private String nome;
     private String senha;
     
