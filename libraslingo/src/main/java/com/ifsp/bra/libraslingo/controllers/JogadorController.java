@@ -41,15 +41,17 @@ public class JogadorController {
     }
     
     //POST
-    @PostMapping
+    @PostMapping("/criarJogador")
     public Jogador criarJogador(@RequestBody Jogador jogador) {
         jogador.setId(ID++);
+        jogador.setNome(jogador.getNome());
+        jogador.setSenha(jogador.getSenha());
         jogadores.add(jogador);
         return jogador;
     }
 
     //PUT
-    @PutMapping("/{id}")
+    @PutMapping("/atualizar/{id}")
     public Jogador atualizarJogador(@PathVariable Long id, @RequestBody Jogador jogador) {
         for (int i = 0; i < jogadores.size(); i++) {
             if (jogadores.get(i).getId().equals(id)) {
@@ -63,7 +65,7 @@ public class JogadorController {
     
 
     //DELETE
-    @DeleteMapping("/{id}")
+    @DeleteMapping("remover/{id}")
     public String deletarJogador(@PathVariable Long id) {
         boolean jogadorRemovido = jogadores.removeIf(jogador -> jogador.getId().equals(id));
         
