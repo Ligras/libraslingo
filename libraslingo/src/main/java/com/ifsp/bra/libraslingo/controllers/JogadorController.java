@@ -44,8 +44,6 @@ public class JogadorController {
     @PostMapping("/criarJogador")
     public Jogador criarJogador(@RequestBody Jogador jogador) {
         jogador.setId(ID++);
-        jogador.setNome(jogador.getNome());
-        jogador.setSenha(jogador.getSenha());
         jogadores.add(jogador);
         return jogador;
     }
