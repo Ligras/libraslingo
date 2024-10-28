@@ -3,6 +3,8 @@ package com.ifsp.bra.libraslingo.controllers;
 import org.springframework.web.bind.annotation.*;
 
 import com.ifsp.bra.libraslingo.model.Jogador;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,12 @@ public class JogadorController {
     //GET
 
     //POST
+    @PostMapping("/criarjogador")
+    public ResponseEntity<Jogador> criarJogador(@RequestBody Jogador novoJogador) {
+        novoJogador.setId(ID++); 
+        jogadores.add(novoJogador); 
+        return new ResponseEntity<>(novoJogador, HttpStatus.CREATED); 
+    }
 
     //PUT
 
