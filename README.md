@@ -1,2 +1,2 @@
-# libraslingo
-# versão principal
+# LibrasLingo
+# Participantes:
