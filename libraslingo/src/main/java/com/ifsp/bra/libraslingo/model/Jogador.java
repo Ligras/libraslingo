@@ -1,9 +1,22 @@
 package com.ifsp.bra.libraslingo.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Jogador {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String nome;
     private String senha;
+
+    public Jogador() {
+       
+    }
 
     public Jogador(Long id, String nome, String senha) {
         this.id = id;
@@ -35,4 +48,3 @@ public class Jogador {
         this.senha = senha;
     }
 }
-

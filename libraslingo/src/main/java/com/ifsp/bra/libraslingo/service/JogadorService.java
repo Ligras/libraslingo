@@ -10,8 +10,8 @@ import com.ifsp.bra.libraslingo.model.Jogador;
 @Service
 public class JogadorService {
 
-    // Simulando um banco de dados com um mapa
     private static Map<Long, Jogador> jogadores = new HashMap<>();
+    private static long currentId = 3; 
 
     static {
         jogadores.put(0L, new Jogador(0L, "jogador0", "1234"));
@@ -19,7 +19,31 @@ public class JogadorService {
         jogadores.put(2L, new Jogador(2L, "jogador2", "4321"));
     }
 
+   
     public Jogador getJogadorById(Long id) {
         return jogadores.get(id);
+    }
+
+   
+    public Jogador addJogador(Jogador jogador) {
+        jogador.setId(currentId++);
+        jogadores.put(jogador.getId(), jogador);
+        return jogador;
+    }
+
+  
+    public Jogador updateJogador(Long id, Jogador jogadorAtualizado) {
+        if (jogadores.containsKey(id)) {
+            Jogador jogador = jogadores.get(id);
+            jogador.setNome(jogadorAtualizado.getNome());
+            jogador.setSenha(jogadorAtualizado.getSenha());
+            return jogador;
+        }
+        return null; 
+    }
+
+   
+    public boolean deleteJogador(Long id) {
+        return jogadores.remove(id) != null; 
     }
 }
