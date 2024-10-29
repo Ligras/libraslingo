@@ -26,22 +26,22 @@ public class JogadorController {
         jogadores.add(new Jogador(ID++, "Jogador2", "4321"));
     }
 
-
+    // GET sem id (para retornar todos os jogadores)
     @GetMapping
     public List<Jogador> getAllJogadores() {
         return jogadores;
     }
 
-    
+    // GET com id (para retornar um jogador específico)
     @GetMapping("/{id}")
     public Jogador getJogadorById(@PathVariable long id) {
         return jogadores.stream()
                 .filter(jogador -> jogador.getId() == id)
                 .findFirst()
-                .orElse(null); 
+                .orElse(null); // Retorna null se o jogador não for encontrado
     }
 
-    
+    // POST (para adicionar um novo jogador)
     @PostMapping
     public Jogador addJogador(@RequestBody Jogador jogador) {
         jogador.setId(ID++);
@@ -49,7 +49,7 @@ public class JogadorController {
         return jogador;
     }
 
-    
+    // PUT (para atualizar um jogador existente)
     @PutMapping("/{id}")
     public Jogador updateJogador(@PathVariable long id, @RequestBody Jogador jogadorAtualizado) {
         for (Jogador jogador : jogadores) {
@@ -62,12 +62,10 @@ public class JogadorController {
         return null;
     }
 
-    
+    // DELETE (para remover um jogador específico)
     @DeleteMapping("/{id}")
     public String deleteJogador(@PathVariable long id) {
         boolean removed = jogadores.removeIf(jogador -> jogador.getId() == id);
         return removed ? "Jogador removido com sucesso." : "Jogador não encontrado.";
     }
 }
-
-
