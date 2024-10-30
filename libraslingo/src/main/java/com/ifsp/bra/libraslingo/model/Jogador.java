@@ -1,50 +1,40 @@
 package com.ifsp.bra.libraslingo.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 @Entity
-public class Jogador {
+public class Jogador extends Usuario {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-    private String nome;
-    private String senha;
+    private int pontuacaoRanking;
 
+    // Construtores
     public Jogador() {
-       
+        super(); // Chama o construtor da classe pai (Usuario)
     }
 
-    public Jogador(Long id, String nome, String senha) {
-        this.id = id;
-        this.nome = nome;
-        this.senha = senha;
+    public Jogador(String apelido, String senha, int pontuacaoRanking) {
+        super(apelido, senha); // Chama o construtor da classe pai (Usuario)
+        this.pontuacaoRanking = pontuacaoRanking;
     }
 
-    public Long getId() {
-        return id;
+    // Getter e Setter para pontuacaoRanking
+    public int getPontuacaoRanking() {
+        return pontuacaoRanking;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setPontuacaoRanking(int pontuacaoRanking) {
+        this.pontuacaoRanking = pontuacaoRanking;
     }
 
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
+    // Método para simular uma partida
+    public void jogar() {
+        // Lógica do jogo
+        // Por exemplo, incrementar a pontuação de acordo com o desempenho do jogador
+        System.out.println(getApelido() + " está jogando...");
+        
+        // Exemplo de lógica para incrementar a pontuação
+        int pontosGanho = (int) (Math.random() * 100); // Ganha um número aleatório de pontos
+        pontuacaoRanking += pontosGanho;
+        System.out.println(getApelido() + " ganhou " + pontosGanho + " pontos! Total: " + pontuacaoRanking);
     }
 }

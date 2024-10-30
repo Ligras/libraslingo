@@ -1,71 +1,59 @@
 package com.ifsp.bra.libraslingo.controllers;
 
-import java.util.ArrayList;
+import com.ifsp.bra.libraslingo.model.Jogador;
+import com.ifsp.bra.libraslingo.service.JogadorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.ifsp.bra.libraslingo.model.Jogador;
-
 @RestController
-@RequestMapping("/jogadores")
+@RequestMapping("/api/jogadores")
 public class JogadorController {
-    private List<Jogador> jogadores = new ArrayList<>();
-    private long ID = 0;
 
-    public JogadorController(){
-        jogadores.add(new Jogador(ID++, "Jogador0", "1234"));
-        jogadores.add(new Jogador(ID++, "Jogador1", "5678"));
-        jogadores.add(new Jogador(ID++, "Jogador2", "4321"));
-    }
+    @Autowired
+    private JogadorService jogadorService;
 
-    // GET sem id (para retornar todos os jogadores)
+    // Endpoint para listar todos os jogadores
     @GetMapping
-    public List<Jogador> getAllJogadores() {
-        return jogadores;
+    public ResponseEntity<List<Jogador>> listarJogadores() {
+        List<Jogador> jogadores = jogadorService.listarTodos();
+        return ResponseEntity.ok(jogadores);
     }
 
-    // GET com id (para retornar um jogador específico)
+    // Endpoint para buscar um jogador por ID
     @GetMapping("/{id}")
-    public Jogador getJogadorById(@PathVariable long id) {
-        return jogadores.stream()
-                .filter(jogador -> jogador.getId() == id)
-                .findFirst()
-                .orElse(null); // Retorna null se o jogador não for encontrado
+    public ResponseEntity<Jogador> buscarJogador(@PathVariable Long id) {
+        Jogador jogador = jogadorService.buscarPorId(id);
+        return jogador != null ? ResponseEntity.ok(jogador) : ResponseEntity.notFound().build();
     }
 
-    // POST (para adicionar um novo jogador)
+    // Endpoint para criar um novo jogador
     @PostMapping
-    public Jogador addJogador(@RequestBody Jogador jogador) {
-        jogador.setId(ID++);
-        jogadores.add(jogador);
-        return jogador;
+    public ResponseEntity<Jogador> criarJogador(@RequestBody Jogador jogador) {
+        Jogador novoJogador = jogadorService.salvar(jogador);
+        return ResponseEntity.ok(novoJogador);
     }
 
-    // PUT (para atualizar um jogador existente)
+    // Endpoint para atualizar um jogador
     @PutMapping("/{id}")
-    public Jogador updateJogador(@PathVariable long id, @RequestBody Jogador jogadorAtualizado) {
-        for (Jogador jogador : jogadores) {
-            if (jogador.getId() == id) {
-                jogador.setNome(jogadorAtualizado.getNome());
-                jogador.setSenha(jogadorAtualizado.getSenha());
-                return jogador;
-            }
-        }
-        return null;
+    public ResponseEntity<Jogador> atualizarJogador(@PathVariable Long id, @RequestBody Jogador jogadorAtualizado) {
+        Jogador jogador = jogadorService.atualizar(id, jogadorAtualizado);
+        return jogador != null ? ResponseEntity.ok(jogador) : ResponseEntity.notFound().build();
     }
 
-    // DELETE (para remover um jogador específico)
+    // Endpoint para deletar um jogador
     @DeleteMapping("/{id}")
-    public String deleteJogador(@PathVariable long id) {
-        boolean removed = jogadores.removeIf(jogador -> jogador.getId() == id);
-        return removed ? "Jogador removido com sucesso." : "Jogador não encontrado.";
+    public ResponseEntity<Void> deletarJogador(@PathVariable Long id) {
+        jogadorService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Endpoint para jogar (chamar o método jogar)
+    @PutMapping("/{id}/jogar")
+    public ResponseEntity<Void> jogar(@PathVariable Long id) {
+        jogadorService.jogar(id);
+        return ResponseEntity.ok().build();
     }
 }

@@ -1,49 +1,61 @@
 package com.ifsp.bra.libraslingo.service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ifsp.bra.libraslingo.model.Jogador;
+import com.ifsp.bra.libraslingo.repository.JogadorRepository;
 
 @Service
 public class JogadorService {
 
-    private static Map<Long, Jogador> jogadores = new HashMap<>();
-    private static long currentId = 3; 
+    @Autowired
+    private JogadorRepository jogadorRepository;
 
-    static {
-        jogadores.put(0L, new Jogador(0L, "jogador0", "1234"));
-        jogadores.put(1L, new Jogador(1L, "jogador1", "5678"));
-        jogadores.put(2L, new Jogador(2L, "jogador2", "4321"));
+    // Método para listar todos os jogadores
+    public List<Jogador> listarTodos() {
+        return jogadorRepository.findAll();
     }
 
-   
-    public Jogador getJogadorById(Long id) {
-        return jogadores.get(id);
+    // Método para buscar um jogador por ID
+    public Jogador buscarPorId(Long id) {
+        Optional<Jogador> jogador = jogadorRepository.findById(id);
+        return jogador.orElse(null);
     }
 
-   
-    public Jogador addJogador(Jogador jogador) {
-        jogador.setId(currentId++);
-        jogadores.put(jogador.getId(), jogador);
-        return jogador;
+    // Método para salvar um novo jogador
+    public Jogador salvar(Jogador jogador) {
+        return jogadorRepository.save(jogador);
     }
 
-  
-    public Jogador updateJogador(Long id, Jogador jogadorAtualizado) {
-        if (jogadores.containsKey(id)) {
-            Jogador jogador = jogadores.get(id);
-            jogador.setNome(jogadorAtualizado.getNome());
-            jogador.setSenha(jogadorAtualizado.getSenha());
-            return jogador;
+    // Método para atualizar um jogador existente
+    public Jogador atualizar(Long id, Jogador jogadorAtualizado) {
+        if (jogadorRepository.existsById(id)) {
+            jogadorAtualizado.setId(id);
+            return jogadorRepository.save(jogadorAtualizado);
         }
-        return null; 
+        return null;
     }
 
-   
-    public boolean deleteJogador(Long id) {
-        return jogadores.remove(id) != null; 
+    // Método para deletar um jogador
+    public void deletar(Long id) {
+        if (jogadorRepository.existsById(id)) {
+            jogadorRepository.deleteById(id);
+        }
+    }
+
+    // Método para chamar o método jogar do jogador
+    public void jogar(Long id) {
+        Optional<Jogador> jogador = jogadorRepository.findById(id);
+        if (jogador.isPresent()) {
+            jogador.get().jogar(); // Chama o método jogar() na instância do jogador
+            // Se você quiser atualizar a pontuação no banco após jogar, você pode salvar novamente:
+            jogadorRepository.save(jogador.get());
+        } else {
+            System.out.println("Jogador não encontrado com o ID: " + id);
+        }
     }
 }
